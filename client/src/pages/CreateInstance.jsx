@@ -1,0 +1,145 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CustomButton, FormField, Loader } from '../components';
+
+const CreateInstance = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const [instanceId, setInstanceId] = useState(null); // Variable to store the instance ID
+  const [form, setForm] = useState({
+    instanceName: '',
+    organizationName: '',
+    description: '',
+  });
+  const [candidates, setCandidates] = useState([
+    { name: '', role: '', description: '' }, // Initial candidate setup
+  ]);
+
+  const handleInstanceFieldChange = (fieldName, e) => {
+    setForm({ ...form, [fieldName]: e.target.value });
+  };
+
+  const handleCandidateFieldChange = (fieldName, e, index) => {
+    const updatedCandidates = candidates.map((candidate, idx) => {
+      if (idx === index) {
+        return { ...candidate, [fieldName]: e.target.value };
+      }
+      return candidate;
+    });
+    setCandidates(updatedCandidates);
+  };
+
+  const handleAddCandidate = () => {
+    const newCandidate = { name: '', role: '', description: '' };
+    setCandidates([...candidates, newCandidate]);
+  };
+
+  const handleSubmitInstance = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Logic to submit instance creation goes here
+    // Simulate setting instance ID after creation
+    const simulatedInstanceId = "123"; // Placeholder for actual instance ID obtained from blockchain event
+    setInstanceId(simulatedInstanceId);
+    setIsLoading(false);
+    // Optionally navigate or show a confirmation
+  };
+
+  const handleSubmitCandidates = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Logic to submit candidates goes here, using the instanceId
+    console.log('Submitting Candidates for Instance ID:', instanceId, candidates);
+    // Example: await addCandidatesToInstance(instanceId, candidates);
+    setIsLoading(false);
+    navigate('/'); // Navigate to the dashboard or a confirmation page after successful candidate addition
+  };
+
+  return (
+    <div className="bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4">
+      {isLoading && <Loader />}
+      <form onSubmit={handleSubmitInstance} className="w-full mt-[20px] flex flex-col gap-[30px]">
+        <div className="w-full bg-[#8c6dfd] text-white text-center py-[10px] rounded-[10px]">
+            <h2 className="font-epilogue font-bold">Create a Voting Instance</h2>
+        </div>
+        <FormField 
+          labelName="Instance Name *"
+          placeholder="Instance Name"
+          inputType="text"
+          value={form.instanceName}
+          handleChange={(e) => handleInstanceFieldChange('instanceName', e)}
+        />
+        <FormField 
+          labelName="Organization Name *"
+          placeholder="Organization Name"
+          inputType="text"
+          value={form.organizationName}
+          handleChange={(e) => handleInstanceFieldChange('organizationName', e)}
+        />
+        <FormField 
+          labelName="Description *"
+          placeholder="Describe the voting instance"
+          isTextArea={true}
+          value={form.description}
+          handleChange={(e) => handleInstanceFieldChange('description', e)}
+        />
+        <div className="flex justify-center items-center">
+          <CustomButton 
+            btnType="submit"
+            title="Create Instance"
+            styles="bg-[#1dc071]"
+          />
+        </div>
+      </form>
+
+      {/* Candidate Details Form */}
+      {instanceId && ( // Only show this form if an instanceId is set
+        <form onSubmit={handleSubmitCandidates} className="w-full mt-[40px] flex flex-col gap-[30px]">
+          <div className="w-full bg-[#8c6dfd] text-white text-center py-[10px] rounded-[10px]">
+            <h2 className="font-epilogue font-bold">Add Candidate Details</h2>
+          </div>
+          {candidates.map((candidate, index) => (
+            <div key={index}>
+              <FormField 
+                labelName="Candidate Name *"
+                placeholder="Candidate Name"
+                inputType="text"
+                value={candidate.name}
+                handleChange={(e) => handleCandidateFieldChange('name', e, index)}
+              />
+              <FormField 
+                labelName="Candidate Role *"
+                placeholder="Candidate Role"
+                inputType="text"
+                value={candidate.role}
+                handleChange={(e) => handleCandidateFieldChange('role', e, index)}
+              />
+              <FormField 
+                labelName="Candidate Description *"
+                placeholder="Describe the candidate"
+                isTextArea={true}
+                value={candidate.description}
+                handleChange={(e) => handleCandidateFieldChange('description', e, index)}
+              />
+            </div>
+          ))}
+          <div className="flex justify-between items-center">
+            <CustomButton 
+              btnType="button"
+              title="Add another candidate"
+              styles="bg-[#1dc071]"
+              handleClick={handleAddCandidate}
+            />
+            <CustomButton 
+              btnType="submit"
+              title="Submit Candidates"
+              styles="bg-[#4caf50]"
+            />
+          </div>
+        </form>
+      )}
+    </div>
+  );
+};
+
+export default CreateInstance;
