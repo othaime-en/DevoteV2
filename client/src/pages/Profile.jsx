@@ -5,26 +5,26 @@ import { useStateContext } from '../context'
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState([]);
+  const [instances, setCampaigns] = useState([]);
 
-  const { address, contract, getUserCampaigns } = useStateContext();
+  const { address, contract, getUserInstances } = useStateContext();
 
-  const fetchCampaigns = async () => {
+  const fetchInstances = async () => {
     setIsLoading(true);
-    const data = await getUserCampaigns();
+    const data = await getUserInstances();
     setCampaigns(data);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    if(contract) fetchCampaigns();
+    if(contract) fetchInstances();
   }, [address, contract]);
 
   return (
     <DisplayCampaigns 
-      title="All Campaigns"
+      title="Your voting Instances"
       isLoading={isLoading}
-      campaigns={campaigns}
+      campaigns={instances}
     />
   )
 }

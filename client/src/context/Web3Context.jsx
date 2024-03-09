@@ -1,14 +1,18 @@
 // StateContext.js
 import React, { createContext, useContext } from 'react';
-import { useContract, useContractWrite } from '@thirdweb-dev/react';
+import { useContract, useContractWrite, useMetamask, useAddress, useContractRead } from '@thirdweb-dev/react';
+import { ethers } from 'ethers';
 
 const StateContext = createContext();
 
 export const StateContextProvider = ({ children }) => {
   const { contract } = useContract("0x3fE6D2A5E0C7761a5edf4e9F33f417af86E93c90");
 
+  const address = useAddress();
+  const connect = useMetamask();
+
   // Function to create a voting instance
-  const createInstance = async (instanceName, organizationName, description) => {
+  const createNewInstance = async (instanceName, organizationName, description) => {
     const { mutateAsync: createInstanceCall } = useContractWrite(contract, "createInstance");
     try {
       const data = await createInstanceCall({ args: [instanceName, organizationName, description] });
@@ -36,7 +40,7 @@ export const StateContextProvider = ({ children }) => {
   };
 
   return (
-    <StateContext.Provider value={{ createInstance, addCandidates }}>
+    <StateContext.Provider value={{ createNewInstance, addCandidates }}>
       {children}
     </StateContext.Provider>
   );

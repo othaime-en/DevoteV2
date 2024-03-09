@@ -5,13 +5,13 @@ import { useStateContext } from '../context'
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState([]);
+  const [instances, setCampaigns] = useState([]);
 
-  const { address, contract, getCampaigns } = useStateContext();
+  const { address, contract, getAllInstances } = useStateContext();
 
   const fetchCampaigns = async () => {
     setIsLoading(true);
-    const data = await getCampaigns();
+    const data = await getAllInstances();
     setCampaigns(data);
     setIsLoading(false);
   }
@@ -22,9 +22,9 @@ const Home = () => {
 
   return (
     <DisplayCampaigns 
-      title="All Campaigns"
+      title="All Instances"
       isLoading={isLoading}
-      campaigns={campaigns}
+      campaigns={instances}
     />
   )
 }

@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton, FormField, Loader } from '../components';
+import { useStateContext } from '../context';
 
 const CreateInstance = () => {
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [instanceId, setInstanceId] = useState(null); // Variable to store the instance ID
-  const [form, setForm] = useState({
-    instanceName: '',
-    organizationName: '',
-    description: '',
-  });
-  const [candidates, setCandidates] = useState([
-    { name: '', role: '', description: '' }, // Initial candidate setup
-  ]);
+    const navigate = useNavigate();
+    const { createNewInstance, addCandidates } = useStateContext();
+    const [isLoading, setIsLoading] = useState(false);
+    const [instanceId, setInstanceId] = useState(null);
+    const [form, setForm] = useState({
+      instanceName: '',
+      organizationName: '',
+      description: '',
+    });
+    const [candidates, setCandidates] = useState([
+      { name: '', role: '', description: '' },
+    ]);
 
   const handleInstanceFieldChange = (fieldName, e) => {
     setForm({ ...form, [fieldName]: e.target.value });
@@ -37,22 +39,27 @@ const CreateInstance = () => {
   const handleSubmitInstance = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Logic to submit instance creation goes here
-    // Simulate setting instance ID after creation
-    const simulatedInstanceId = "123"; // Placeholder for actual instance ID obtained from blockchain event
-    setInstanceId(simulatedInstanceId);
-    setIsLoading(false);
-    // Optionally navigate or show a confirmation
+    try {
+      const instanceId = await createNewInstance(form.instanceName, form.organizationName, form.description);
+      setInstanceId(instanceId); // Assuming the returned object has an instanceId field
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   const handleSubmitCandidates = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Logic to submit candidates goes here, using the instanceId
-    console.log('Submitting Candidates for Instance ID:', instanceId, candidates);
-    // Example: await addCandidatesToInstance(instanceId, candidates);
-    setIsLoading(false);
-    navigate('/'); // Navigate to the dashboard or a confirmation page after successful candidate addition
+    try {
+      await addCandidates(instanceId, candidates);
+      setIsLoading(false);
+      navigate('/'); // Or navigate to a confirmation/success page
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
   };
 
   return (

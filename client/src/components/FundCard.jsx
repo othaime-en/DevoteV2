@@ -1,14 +1,15 @@
 import React from 'react';
+import { Novatrix } from 'uvcanvas';
 
 import { tagType, thirdweb } from '../assets';
-import { daysLeft } from '../utils';
+import { hoursLeft } from '../utils';
 
-const FundCard = ({ owner, title, description, target, deadline, amountCollected, image, handleClick }) => {
-  const remainingDays = daysLeft(deadline);
+const FundCard = ({ owner, title, description, target, endTime, candidateCount, image, handleClick }) => {
+  const remainingHours = hoursLeft(endTime);
   
   return (
     <div className="sm:w-[288px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer" onClick={handleClick}>
-      <img src={image} alt="fund" className="w-full h-[158px] object-cover rounded-[15px]"/>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRj102iDPG6R3exjEUScJOM0WmFWLbAk3l0dQ&usqp=CAU" alt="vote" className="w-full h-[158px] object-cover rounded-[15px]"/>
 
       <div className="flex flex-col p-4">
         <div className="flex flex-row items-center mb-[18px]">
@@ -23,12 +24,12 @@ const FundCard = ({ owner, title, description, target, deadline, amountCollected
 
         <div className="flex justify-between flex-wrap mt-[15px] gap-2">
           <div className="flex flex-col">
-            <h4 className="font-epilogue font-semibold text-[14px] text-[#b2b3bd] leading-[22px]">{amountCollected}</h4>
-            <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] text-[#808191] sm:max-w-[120px] truncate">Raised of {target}</p>
+            <h4 className="font-epilogue font-semibold text-[14px] text-[#b2b3bd] leading-[22px]">{candidateCount}</h4>
+            <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] text-[#808191] sm:max-w-[120px] truncate">Candidates {target}</p>
           </div>
           <div className="flex flex-col">
-            <h4 className="font-epilogue font-semibold text-[14px] text-[#b2b3bd] leading-[22px]">{remainingDays}</h4>
-            <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] text-[#808191] sm:max-w-[120px] truncate">Days Left</p>
+            <h4 className="font-epilogue font-semibold text-[14px] text-[#b2b3bd] leading-[22px]">{remainingHours}</h4>
+            <p className="mt-[3px] font-epilogue font-normal text-[12px] leading-[18px] text-[#808191] sm:max-w-[120px] truncate">Hours Left</p>
           </div>
         </div>
 
